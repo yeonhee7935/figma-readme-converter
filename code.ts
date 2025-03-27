@@ -178,12 +178,9 @@ function applyTextStyle(
   // 색상 설정
   const color = hexToRgb(textColor);
   textNode.fills = [{ type: 'SOLID', color }];
-  
-  // 자동 너비 조정
-  textNode.textAutoResize = "WIDTH_AND_HEIGHT";
 }
 
-// 새 프레임 생성 및 설정
+// 새 프레임 생성 및 설정 (오토레이아웃 적용)
 function createNewFrame(
   settings: MarkdownSettings,
   frameIndex: number,
@@ -203,9 +200,20 @@ function createNewFrame(
   // 프레임 배경 설정
   currentFrame.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }];
   
-  // 오토레이아웃 대신 고정 레이아웃 사용, 패딩은 요소 위치로 조정
+  // 오토레이아웃 적용
+  currentFrame.layoutMode = "VERTICAL";
+  currentFrame.paddingLeft = settings.padding;
+  currentFrame.paddingRight = settings.padding;
+  currentFrame.paddingTop = settings.padding;
+  currentFrame.paddingBottom = settings.padding;
+  currentFrame.itemSpacing = settings.elementSpacing;
+  
   // 내용이 넘치면 잘림 처리
   currentFrame.clipsContent = true;
+  
+  // 크기 고정 (오토레이아웃 사용해도 크기는 고정)
+  currentFrame.primaryAxisSizingMode = "FIXED";
+  currentFrame.counterAxisSizingMode = "FIXED";
   
   return currentFrame;
 }
@@ -243,16 +251,12 @@ async function convertMarkdownToFigma(markdown: string, settings: MarkdownSettin
   let currentFrame = createNewFrame(settings, 1, framesPerRow);
   let frameIndex = 1;
   
-  // 현재 Y 위치 - 패딩으로 시작
-  let currentY = settings.padding;
-  
   // 요소들을 반복하며 Figma 객체 생성
   for (const element of elements) {
     // 구분자를 만나면 새 프레임 생성
     if (element.type === 'separator') {
       frameIndex++;
       currentFrame = createNewFrame(settings, frameIndex, framesPerRow);
-      currentY = settings.padding;
       continue;
     }
     
@@ -291,15 +295,12 @@ async function convertMarkdownToFigma(markdown: string, settings: MarkdownSettin
         );
       }
       
-      // 위치 설정
-      textNode.x = settings.padding;
-      textNode.y = currentY;
+      // 오토레이아웃에서 텍스트 너비 지정
+      textNode.layoutAlign = "STRETCH";
+      textNode.textAutoResize = "HEIGHT";
       
       // 프레임에 추가
       currentFrame.appendChild(textNode);
-      
-      // 다음 요소 위치 업데이트
-      currentY += textNode.height + settings.elementSpacing;
     }
     
     // 일반 텍스트 (모든 비헤딩 텍스트를 포함)
@@ -318,19 +319,12 @@ async function convertMarkdownToFigma(markdown: string, settings: MarkdownSettin
         settings.letterSpacing
       );
       
-      // 위치 설정
-      textNode.x = settings.padding;
-      textNode.y = currentY;
-      textNode.resize(
-        settings.frameWidth - (settings.padding * 2),
-        textNode.height
-      );
+      // 오토레이아웃에서 텍스트 너비 지정
+      textNode.layoutAlign = "STRETCH";
+      textNode.textAutoResize = "HEIGHT";
       
       // 프레임에 추가
       currentFrame.appendChild(textNode);
-      
-      // 다음 요소 위치 업데이트
-      currentY += textNode.height + settings.elementSpacing;
     }
   }
   
