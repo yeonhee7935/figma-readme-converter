@@ -1,40 +1,62 @@
-Below are the steps to get your plugin running. You can also find instructions at:
+# Markdown to Figma
+Markdown to Figma는 마크다운 형식의 텍스트를 피그마 프레임으로 쉽게 변환해주는 플러그인입니다.  
 
-  https://www.figma.com/plugin-docs/plugin-quickstart-guide/
 
-This plugin template uses Typescript and NPM, two standard tools in creating JavaScript applications.
+https://github.com/user-attachments/assets/39144b22-52bf-4c23-9636-8b2d75bbbddd
 
-First, download Node.js which comes with NPM. This will allow you to install TypeScript and other
-libraries. You can find the download link here:
 
-  https://nodejs.org/en/download/
+<br/><br/>
 
-Next, install TypeScript using the command:
+## 개발 계기
 
-  npm install -g typescript
+사실 이 플러그인은 제가 직접 필요해서 만들었어요! 
 
-Finally, in the directory of your plugin, get the latest type definitions for the plugin API by running:
+인스타그램 포스트를 만들 때마다 비슷한 패턴으로 작업하는 걸 발견했거든요. 매번 마크다운으로 글을 쓴 후, 그걸 일일이 피그마로 옮겨서 디자인하는 과정이 너무 반복적이었어요. 
 
-  npm install --save-dev @figma/plugin-typings
+특히 여러 페이지를 만들 때는 더 힘들었어요. 마크다운에서 구분선(---)만 그어도 새 페이지가 만들어지면 얼마나 편할까 싶었습니다. 헤딩(#, ##)도 자동으로 스타일이 적용되면 좋겠다 싶었고요.
 
-If you are familiar with JavaScript, TypeScript will look very familiar. In fact, valid JavaScript code
-is already valid Typescript code.
+그래서 제가 자주 쓰는 패턴을 자동화하는 플러그인을 만들었습니다. 이제 마크다운 텍스트만 붙여넣으면 스타일링된 피그마 프레임이 뚝딱 만들어져요. 정말 시간을 많이 아끼게 되었답니다!
 
-TypeScript adds type annotations to variables. This allows code editors such as Visual Studio Code
-to provide information about the Figma API while you are writing code, as well as help catch bugs
-you previously didn't notice.
 
-For more information, visit https://www.typescriptlang.org/
+<br/><br/>
 
-Using TypeScript requires a compiler to convert TypeScript (code.ts) into JavaScript (code.js)
-for the browser to run.
+## 주요 기능
+- 마크다운 텍스트를 피그마 프레임으로 자동 변환
+- 헤딩(#, ##, ###)을 인식하여 자동으로 스타일 적용
+- 일반 텍스트 및 목록 지원
+- 구분선(---)을 통한 멀티 페이지(캐러셀) 생성 기능
+- 사용자 설정 옵션:
+  - 프레임 크기 설정
+  - 패딩 값 조정
+  - 텍스트 스타일(크기, 색상) 설정
+  - 요소 간 간격 조정
+  - 행간, 자간 설정
+- 헤딩 레벨별 크기 및 스타일 세부 설정
+- 글꼴 선택 및 적용
+- 사용자 설정 저장 기능
 
-We recommend writing TypeScript code using Visual Studio code:
 
-1. Download Visual Studio Code if you haven't already: https://code.visualstudio.com/.
-2. Open this directory in Visual Studio Code.
-3. Compile TypeScript to JavaScript: Run the "Terminal > Run Build Task..." menu item,
-    then select "npm: watch". You will have to do this again every time
-    you reopen Visual Studio Code.
+<br/><br/>
 
-That's it! Visual Studio Code will regenerate the JavaScript file every time you save.
+## 사용 방법
+
+1. 마크다운 형식의 텍스트를 입력 영역에 붙여넣으세요.
+2. '변환하기' 버튼을 클릭하세요.
+3. 자동으로 생성된 피그마 프레임을 확인하세요.
+4. 필요한 경우 '설정' 탭에서 다양한 스타일 옵션을 조정하세요.
+
+
+<br/><br/>
+
+## 지원하는 마크다운 문법
+
+- 헤딩: # 제목, ## 부제목, ### 소제목
+- 일반 텍스트: 헤딩 사이의 모든 텍스트는 하나의 블록으로 처리
+- 글머리기호 목록: -, *, + 
+- 페이지 구분: --- (구분선)
+
+
+<br/><br/>
+
+## 라이선스
+MIT
