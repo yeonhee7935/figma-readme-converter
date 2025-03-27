@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      font-family: Inter, sans-serif;
+      margin: 0;
+      padding: 16px;
+      color: #333;
+      font-size: 14px;
+    }
+    
+    h1, h2, h3 {
+      margin-top: 0;
+      font-weight: 500;
+    }
+    
+    h1 {
+      font-size: 20px;
+      margin-bottom: 16px;
+    }
+    
+    h2 {
+      font-size: 16px;
+      margin-bottom: 12px;
+      padding-top: 8px;
+      border-top: 1px solid #e0e0e0;
+    }
+    
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #e0e0e0;
+      margin-bottom: 16px;
+    }
+    
+    .tab {
+      padding: 8px 16px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+    }
+    
+    .tab.active {
+      border-bottom-color: #18a0fb;
+      font-weight: 500;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    textarea {
+      width: 100%;
+      height: 250px;
+      margin-bottom: 16px;
+      padding: 8px;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      font-family: monospace;
+      resize: vertical;
+    }
+    
+    .settings-row {
+      display: flex;
+      margin-bottom: 12px;
+      align-items: center;
+    }
+    
+    .settings-label {
+      flex: 1;
+      min-width: 140px;
+    }
+    
+    .settings-input {
+      flex: 2;
+    }
+    
+    input[type="number"],
+    input[type="text"],
+    input[type="color"],
+    select {
+      width: 100%;
+      padding: 6px;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+    }
+    
+    button {
+      background-color: #18a0fb;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 16px;
+      cursor: pointer;
+      font-weight: 500;
+      margin-right: 8px;
+    }
+    
+    button:hover {
+      background-color: #0d8edd;
+    }
+    
+    button.secondary {
+      background-color: #f0f0f0;
+      color: #333;
+    }
+    
+    button.secondary:hover {
+      background-color: #e0e0e0;
+    }
+    
+    .buttons {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 16px;
+    }
+    
+    .preview {
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      padding: 16px;
+      background-color: #f8f8f8;
+      margin-top: 16px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    
+    .preview-title {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+    
+    .info {
+      margin-top: 16px;
+      padding: 12px;
+      background-color: #e6f7ff;
+      border-radius: 4px;
+      border-left: 4px solid #1890ff;
+    }
+  </style>
+</head>
+<body>
+  <h1>Markdown to Figma</h1>
+  
+  <div class="tabs">
+    <div class="tab active" data-tab="convert">변환</div>
+    <div class="tab" data-tab="settings">설정</div>
+    <div class="tab" data-tab="help">도움말</div>
+  </div>
+  
+  <div class="tab-content active" id="convert-tab">
+    <textarea id="markdown-input" placeholder="마크다운 텍스트를 여기에 붙여넣으세요...
+예시:
+# 제목
+## 부제목
+- 항목 1
+- 항목 2
+  - 중첩 항목
+
+---
+새 페이지"></textarea>
+    
+    <div class="buttons">
+      <button id="convert-button">변환하기</button>
+    </div>
+  </div>
+  
+  <div class="tab-content" id="settings-tab">
+    <h2>프레임 설정</h2>
+    <div class="settings-row">
+      <div class="settings-label">프레임 너비(px):</div>
+      <div class="settings-input">
+        <input type="number" id="frame-width" value="1080">
+      </div>
+    </div>
+    <div class="settings-row">
+      <div class="settings-label">프레임 높이(px):</div>
+      <div class="settings-input">
+        <input type="number" id="frame-height" value="1080">
+      </div>
+    </div>
+    <div class="settings-row">
+      <div class="settings-label">패딩(px):</div>
+      <div class="settings-input">
+        <input type="number" id="padding" value="40">
+      </div>
+    </div>
+    
+    <h2>텍스트 설정</h2>
+    <div class="settings-row">
+      <div class="settings-label">텍스트 크기:</div>
+      <div class="settings-input">
+        <select id="text-size">
+          <option value="small">작게</option>
+          <option value="medium" selected>보통</option>
+          <option value="large">크게</option>
+        </select>
+      </div>
+    </div>
+    <div class="settings-row">
+      <div class="settings-label">텍스트 색상:</div>
+      <div class="settings-input">
+        <input type="color" id="text-color" value="#000000">
+      </div>
+    </div>
+    <div class="settings-row">
+      <div class="settings-label">글꼴:</div>
+      <div class="settings-input">
+        <select id="font-family">
+          <option value="Inter">Inter</option>
+          <!-- 다른 글꼴 옵션들은 동적으로 추가됨 -->
+        </select>
+      </div>
+    </div>
+    
+    <h2>헤딩 크기 설정</h2>
+    <div class="settings-row">
+      <div class="settings-label">H1 크기(px):</div>
+      <div class="settings-input">
+        <input type="number" id="h1-size" value="64">
+      </div>
+    </div>
+    <div class="settings-row">
+      <div class="settings-label">H2 크기(px):</div>
+      <div class="settings-input">
+        <input type="number" id="h2-size" value="48">
+      </div>
+    </div>
+    <div class="settings-row">
+      <div class="settings-label">H3 크기(px):</div>
+      <div class="settings-input">
+        <input type="number" id="h3-size" value="36">
+      </div>
+    </div>
+    
+    <div class="buttons">
+      <button id="save-settings">저장</button>
+    </div>
+  </div>
+  
+  <div class="tab-content" id="help-tab">
+    <h2>사용 방법</h2>
+    <p>이 플러그인은 Markdown 형식의 텍스트를 Figma 프레임으로 변환합니다.</p>
+    
+    <h2>지원하는 Markdown 구문</h2>
+    <ul>
+      <li><strong>헤딩</strong>: # 제목, ## 부제목, ### 소제목</li>
+      <li><strong>목록</strong>: - 항목, * 항목, + 항목 (중첩 목록 지원)</li>
+      <li><strong>페이지 구분</strong>: --- (구분선)</li>
+    </ul>
+    
+    <h2>팁</h2>
+    <ul>
+      <li>헤딩은 각 섹션의 시작을 나타냅니다.</li>
+      <li>구분선(---)은 새로운 프레임을 생성합니다 (Instagram 캐러셀용).</li>
+      <li>설정 탭에서 프레임 크기, 글꼴, 색상 등을 사용자 지정할 수 있습니다.</li>
+    </ul>
+  </div>
+  
+  <script>
+    // 탭 전환 함수
+    function switchTab(tabId) {
+      // 모든 탭과 탭 콘텐츠 비활성화
+      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      
+      // 선택한 탭과 탭 콘텐츠 활성화
+      document.querySelector(`.tab[data-tab="${tabId}"]`).classList.add('active');
+      document.getElementById(`${tabId}-tab`).classList.add('active');
+    }
+    
+    // 탭 클릭 이벤트 리스너
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        switchTab(tab.getAttribute('data-tab'));
+      });
+    });
+    
+    // 현재 설정 값 가져오기
+    function getSettings() {
+      return {
+        frameWidth: parseInt(document.getElementById('frame-width').value) || 1080,
+        frameHeight: parseInt(document.getElementById('frame-height').value) || 1080,
+        padding: parseInt(document.getElementById('padding').value) || 40,
+        textSize: document.getElementById('text-size').value,
+        textColor: document.getElementById('text-color').value,
+        fontFamily: document.getElementById('font-family').value,
+        headingSizes: {
+          h1: parseInt(document.getElementById('h1-size').value) || 64,
+          h2: parseInt(document.getElementById('h2-size').value) || 48,
+          h3: parseInt(document.getElementById('h3-size').value) || 36
+        }
+      };
+    }
+    
+    // 마크다운 변환 버튼 클릭 이벤트
+    document.getElementById('convert-button').addEventListener('click', () => {
+      const markdown = document.getElementById('markdown-input').value;
+      
+      if (!markdown.trim()) {
+        alert('변환할 마크다운 내용을 입력해주세요.');
+        return;
+      }
+      
+      const settings = getSettings();
+      
+      parent.postMessage({ 
+        pluginMessage: { 
+          type: 'convert-markdown', 
+          markdown,
+          settings
+        }
+      }, '*');
+    });
+    
+    // 설정 저장 버튼 클릭 이벤트
+    document.getElementById('save-settings').addEventListener('click', () => {
+      const settings = getSettings();
+      
+      parent.postMessage({ 
+        pluginMessage: { 
+          type: 'save-settings', 
+          settings
+        }
+      }, '*');
+    });
+    
+    // 플러그인으로부터 메시지 수신
+    window.onmessage = (event) => {
+      const msg = event.data.pluginMessage;
+      
+      if (!msg) return;
+      
+      // 설정 로드
+      if (msg.type === 'load-settings') {
+        const settings = msg.settings;
+        
+        document.getElementById('frame-width').value = settings.frameWidth;
+        document.getElementById('frame-height').value = settings.frameHeight;
+        document.getElementById('padding').value = settings.padding;
+        document.getElementById('text-size').value = settings.textSize;
+        document.getElementById('text-color').value = settings.textColor;
+        document.getElementById('h1-size').value = settings.headingSizes.h1;
+        document.getElementById('h2-size').value = settings.headingSizes.h2;
+        document.getElementById('h3-size').value = settings.headingSizes.h3;
+        
+        // 폰트 설정 (폰트 목록이 로드된 후)
+        if (settings.fontFamily) {
+          const fontSelect = document.getElementById('font-family');
+          // 기존 옵션 중에 일치하는 것이 있는지 확인
+          for (let i = 0; i < fontSelect.options.length; i++) {
+            if (fontSelect.options[i].value === settings.fontFamily) {
+              fontSelect.selectedIndex = i;
+              break;
+            }
+          }
+        }
+      }
+      
+      // 폰트 목록 로드
+      if (msg.type === 'fonts-list') {
+        const fontSelect = document.getElementById('font-family');
+        const savedFont = fontSelect.value; // 현재 선택된 폰트 저장
+        
+        fontSelect.innerHTML = '';
+        
+        msg.fonts.forEach(font => {
+          const option = document.createElement('option');
+          option.value = font;
+          option.textContent = font;
+          fontSelect.appendChild(option);
+        });
+        
+        // 저장된 폰트로 선택 복원
+        for (let i = 0; i < fontSelect.options.length; i++) {
+          if (fontSelect.options[i].value === savedFont) {
+            fontSelect.selectedIndex = i;
+            break;
+          }
+        }
+      }
+    };
+  </script>
+</body>
+</html>
