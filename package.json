@@ -1,7 +1,7 @@
 {
-  "name": "readme",
+  "name": "markdown-to-figma",
   "version": "1.0.0",
-  "description": "Your Figma Plugin",
+  "description": "Convert Markdown text into formatted Figma frames with customizable styles",
   "main": "code.js",
   "scripts": {
     "build": "tsc -p tsconfig.json",
