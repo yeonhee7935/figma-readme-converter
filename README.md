@@ -1,6 +1,7 @@
 # Markdown to Figma
 Markdown to Figma는 마크다운 형식의 텍스트를 피그마 프레임으로 쉽게 변환해주는 플러그인입니다.  
 
+[Figma링크](https://www.figma.com/community/plugin/1487054364031817258/markdown-to-figma)
 
 https://github.com/user-attachments/assets/39144b22-52bf-4c23-9636-8b2d75bbbddd
 
